@@ -65,7 +65,7 @@ jobs:
         id: signing
         shell: bash
         env:
-          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_BASE64: ${{ secrets.COUCOU_KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.COUCOU_KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.COUCOU_KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.COUCOU_KEY_PASSWORD }}
