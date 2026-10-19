@@ -109,6 +109,7 @@ class DynamicIslandOverlay(private val context: Context) {
     }
     private val replyButton = actionButton("Sohbete dön", true)
     private val stopButton = actionButton("Canlıyı kapat", false)
+    private val listenButton = actionButton("Sesli sohbet", false)
 
     private val params = WindowManager.LayoutParams(
         min(dp(JarvisApp.instance.preferences.dynamicIslandWidthDp), context.resources.displayMetrics.widthPixels - dp(20)),
@@ -138,7 +139,9 @@ class DynamicIslandOverlay(private val context: Context) {
         shell.addView(message, LinearLayout.LayoutParams(-1, -2))
         shell.addView(userLine, LinearLayout.LayoutParams(-1, -2))
         actionRow.addView(replyButton, LinearLayout.LayoutParams(0, dp(34), 1f))
-        actionRow.addView(View(context), LinearLayout.LayoutParams(dp(8), 1))
+        actionRow.addView(View(context), LinearLayout.LayoutParams(dp(6), 1))
+        actionRow.addView(listenButton, LinearLayout.LayoutParams(0, dp(34), 1f))
+        actionRow.addView(View(context), LinearLayout.LayoutParams(dp(6), 1))
         actionRow.addView(stopButton, LinearLayout.LayoutParams(0, dp(34), 1f))
         shell.addView(actionRow, LinearLayout.LayoutParams(-1, -2))
 
@@ -150,6 +153,10 @@ class DynamicIslandOverlay(private val context: Context) {
                 putExtra(MainActivity.EXTRA_OPEN_CHAT, true)
             }
             context.startActivity(intent)
+        }
+        listenButton.setOnClickListener {
+            context.startService(Intent(context, JarvisConversationService::class.java).setAction(JarvisConversationService.ACTION_START_CONVERSATION))
+            setExpanded(false)
         }
         stopButton.setOnClickListener {
             context.startService(Intent(context, JarvisConversationService::class.java).setAction(JarvisConversationService.ACTION_STOP_ALL))
