@@ -15,7 +15,6 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.ImageView
 import com.jarvis.assistant.background.JarvisConversationService
 import com.jarvis.assistant.data.model.ConversationState
 import com.jarvis.assistant.JarvisApp
@@ -54,11 +53,7 @@ class DynamicIslandOverlay(private val context: Context) {
         orientation = LinearLayout.HORIZONTAL
         gravity = Gravity.CENTER_VERTICAL
     }
-    private val mood = ImageView(context).apply {
-        setImageResource(com.jarvis.assistant.R.drawable.ic_helloai_emote)
-        gravity = Gravity.CENTER
-        scaleType = ImageView.ScaleType.CENTER_INSIDE
-    }
+    private val mood = HelloAiMoodView(context)
     private val titleColumn = LinearLayout(context).apply {
         orientation = LinearLayout.VERTICAL
         setPadding(dp(9), 0, dp(4), 0)
@@ -195,9 +190,9 @@ class DynamicIslandOverlay(private val context: Context) {
         }
         applySize()
         val details = Triple("●", presentation.title, presentation.message)
-        mood.setImageResource(emoteResource(presentation.view, isSessionOn))
-        mood.contentDescription = "HelloAI ${presentation.emote.assetName} emote"
-        mood.imageTintList = android.content.res.ColorStateList.valueOf(
+        mood.render(
+            presentation.emote,
+            state == ConversationState.LISTENING || state == ConversationState.THINKING,
             islandAccent(presentation.view, isSessionOn)
         )
         stateLabel.text = details.second
@@ -212,17 +207,6 @@ class DynamicIslandOverlay(private val context: Context) {
         actionRow.visibility = if (expanded) View.VISIBLE else View.GONE
         expandButton.text = if (expanded) "⌃" else "⌄"
         try { windowManager.updateViewLayout(shell, params) } catch (_: Exception) {}
-    }
-
-    private fun emoteResource(view: IslandView, isSessionOn: Boolean): Int {
-        if (!isSessionOn) return com.jarvis.assistant.R.drawable.ic_helloai_error
-        return when (view) {
-            IslandView.LISTENING -> com.jarvis.assistant.R.drawable.ic_helloai_listening
-            IslandView.THINKING, IslandView.SEARCHING -> com.jarvis.assistant.R.drawable.ic_helloai_thinking
-            IslandView.ERROR -> com.jarvis.assistant.R.drawable.ic_helloai_error
-            IslandView.FINISHED, IslandView.SPEAKING -> com.jarvis.assistant.R.drawable.ic_helloai_finished
-            else -> com.jarvis.assistant.R.drawable.ic_helloai_emote
-        }
     }
 
     private fun islandAccent(view: IslandView, isSessionOn: Boolean): Int {
