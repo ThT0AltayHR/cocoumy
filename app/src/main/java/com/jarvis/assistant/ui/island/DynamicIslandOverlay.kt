@@ -181,19 +181,13 @@ class DynamicIslandOverlay(private val context: Context) {
             }
         }
 
-        val details = when {
-            isStandby && !isSessionOn -> Triple("●", "HEY JARVIS BEKLENİYOR", "Ekran kapalıyken de dinleme için izinleri açık tut.")
-            !isSessionOn -> Triple("●", "ÇEVRİMDIŞI", "Canlı asistan kapalı.")
-            state == ConversationState.LISTENING -> Triple("●", "CANLI SOHBET", "Seni dinliyorum.")
-            state == ConversationState.THINKING -> Triple("●", "DÜŞÜNÜYOR", "İsteğini değerlendiriyorum…")
-            state == ConversationState.SPEAKING -> Triple("●", "YANITLIYOR", "Yanıt hazırlanıyor…")
-            !isSessionOn && !isStandby -> Triple("●", "HAZIR BEKLİYOR", "Canlı sohbeti başlatabilirsin.")
-            else -> Triple("●", "CANLI SOHBET", "Bağlantı hazır.")
-        }
+        val presentation = presentationFor(state, isSessionOn, isStandby, userText, assistantText)
+        val details = Triple("●", presentation.title, presentation.message)
         mood.text = details.first
+        mood.contentDescription = "HelloAI ${presentation.emote.assetName} emote"
         mood.setTextColor(if (isSessionOn) Color.rgb(74, 230, 142) else Color.rgb(236, 80, 88))
         stateLabel.text = details.second
-        updatePulse(state == ConversationState.THINKING || state == ConversationState.LISTENING)
+        updatePulse(state == ConversationState.THINKING || state == ConversationState.LISTENING || expanded)
         val latest = assistantText.trim().ifBlank { details.third }
         lastAssistantText = latest
         message.text = latest.take(260)
@@ -203,6 +197,33 @@ class DynamicIslandOverlay(private val context: Context) {
         actionRow.visibility = if (expanded) View.VISIBLE else View.GONE
         expandButton.text = if (expanded) "⌃" else "⌄"
         try { windowManager.updateViewLayout(shell, params) } catch (_: Exception) {}
+    }
+
+    private fun presentationFor(
+        state: ConversationState,
+        isSessionOn: Boolean,
+        isStandby: Boolean,
+        userText: String,
+        assistantText: String
+    ): IslandPresentation {
+        if (isStandby && !isSessionOn) {
+            return IslandPresentation(IslandMode.COMPACT, IslandView.GREETING, IslandEmote.CALM,
+                "HEY JARVIS BEKLENİYOR", "Uyandırma sözcüğünü bekliyorum.")
+        }
+        if (!isSessionOn) {
+            return IslandPresentation(IslandMode.COMPACT, IslandView.EMPTY, IslandEmote.TIRED,
+                "ÇEVRİMDIŞI", "Canlı asistan kapalı.")
+        }
+        return when (state) {
+            ConversationState.LISTENING -> IslandPresentation(IslandMode.EXPANDED, IslandView.LISTENING, IslandEmote.LISTENING,
+                "CANLI SOHBET", userText.ifBlank { "Seni dinliyorum." })
+            ConversationState.THINKING -> IslandPresentation(IslandMode.EXPANDED, IslandView.THINKING, IslandEmote.THINKING,
+                "DÜŞÜNÜYOR", assistantText.ifBlank { "İsteğini değerlendiriyorum…" })
+            ConversationState.SPEAKING -> IslandPresentation(IslandMode.EXPANDED, IslandView.SPEAKING, IslandEmote.PROUD,
+                "YANITLIYOR", assistantText.ifBlank { "Yanıt hazırlanıyor…" })
+            ConversationState.IDLE -> IslandPresentation(IslandMode.COMPACT, IslandView.OVERVIEW, IslandEmote.CALM,
+                "HAZIR", "Bağlantı hazır.")
+        }
     }
 
     private fun updatePulse(shouldPulse: Boolean) {
