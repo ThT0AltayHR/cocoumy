@@ -184,7 +184,7 @@ class SettingsFragment : Fragment() {
 
         binding.rowAppIdentity.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Coucou AI uygulama kimliği")
+                .setTitle("HelloAI uygulama kimliği")
                 .setMessage(com.jarvis.assistant.security.AppIdentityVerifier.report(requireContext()))
                 .setPositiveButton("Kapat", null)
                 .show()
