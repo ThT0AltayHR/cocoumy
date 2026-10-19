@@ -1427,20 +1427,6 @@ class JarvisConversationService : Service() {
                     return@AudioRecorder
                 }
 
-                // Stream user speech to Gemini Live
-                if (liveWebSocket?.isSessionReady() == true) {
-                    while (!preConnectAudioQueue.isEmpty()) {
-                        val queued = preConnectAudioQueue.poll() ?: break
-                        liveWebSocket?.sendAudioChunk(queued)
-                    }
-                    liveWebSocket?.sendAudioChunk(chunk)
-                } else {
-                    // Connection still warming up: buffer up to 60 chunks (~1.2s of audio) so early speech is never lost
-                    if (preConnectAudioQueue.size < 60) {
-                        preConnectAudioQueue.offer(chunk.copyOf())
-                    }
-                }
-
                 // Track ambient noise floor adaptively when quiet
                 if (amplitude < 0.10f) {
                     ambientNoiseFloor = (ambientNoiseFloor * 0.97f + amplitude * 0.03f).coerceIn(0.015f, 0.10f)
@@ -1456,6 +1442,15 @@ class JarvisConversationService : Service() {
 
                 // Dynamic voice threshold: responsive to normal conversational volume (0.035f)
                 val voiceThreshold = maxOf(VAD_MIN_THRESHOLD, ambientNoiseFloor * VAD_NOISE_MULTIPLIER)
+
+                // Do not stream an always-open microphone into Gemini. Sending silence or
+                // ambient noise lets Live infer a turn and make the assistant speak without
+                // a user request. Audio starts only after VAD has confirmed real speech.
+                if (liveWebSocket?.isSessionReady() == true &&
+                    (hasSpeechInCurrentUtterance ||
+                        (amplitude > voiceThreshold && consecutiveVoicedFrames + 1 >= VAD_START_FRAMES))) {
+                    liveWebSocket?.sendAudioChunk(chunk)
+                }
 
                 if (amplitude > voiceThreshold) {
                     consecutiveVoicedFrames++

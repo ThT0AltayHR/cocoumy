@@ -27,8 +27,8 @@ android {
         applicationId = "com.myappai.app"
         minSdk = 26
         targetSdk = 34
-        versionCode = 144
-        versionName = "1.8.8"
+        versionCode = 145
+        versionName = "1.8.11"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "DEVELOPER_NAME", buildConfigString(developerName.ifBlank { "Yayıncı doğrulanmadı" }))
