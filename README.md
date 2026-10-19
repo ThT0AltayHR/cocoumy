@@ -1,6 +1,6 @@
-# Coucou AI for Android
+# HelloAI for Android
 
-**Coucou AI**, Android için tasarlanmış, sesli etkileşim ve cihaz otomasyonu özelliklerini tek bir yardımcı deneyiminde birleştiren bir asistan uygulamasıdır. Bu depo, Coucou AI Android portunun kaynak kodunu içerir.
+**HelloAI**, Android için tasarlanmış, sesli etkileşim ve cihaz otomasyonu özelliklerini tek bir yardımcı deneyiminde birleştiren bir asistan uygulamasıdır. Bu depo, HelloAI Android uygulamasının kaynak kodunu içerir.
 
 ## Öne çıkan özellikler
 

@@ -6,8 +6,8 @@
         <item>Top</item>
         <item>Bottom</item>
     </string-array>
-    <string name="app_name">Coucou AI</string>
-    <string name="jarvis_title">Coucou AI</string>
+    <string name="app_name">HelloAI</string>
+    <string name="jarvis_title">HelloAI</string>
 
     <string name="state_idle">HAZIR</string>
     <string name="state_listening">DİNLİYOR</string>
@@ -56,4 +56,3 @@
     <string name="category_routines">Rutinler</string>
     <string name="category_notes">Notlar</string>
 </resources>
-
