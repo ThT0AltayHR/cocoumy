@@ -66,8 +66,8 @@ class OverlayAvatarActivity : AppCompatActivity() {
         val heightSeek = findViewById<android.widget.SeekBar>(R.id.seekDynamicIslandHeight)
         val topSeek = findViewById<android.widget.SeekBar>(R.id.seekDynamicIslandTop)
         islandSwitch.isChecked = preferences.isDynamicIslandEnabled
-        widthSeek.progress = preferences.dynamicIslandWidthDp - 220
-        heightSeek.progress = preferences.dynamicIslandHeightDp - 42
+        widthSeek.progress = preferences.dynamicIslandWidthDp - 170
+        heightSeek.progress = preferences.dynamicIslandHeightDp - 44
         topSeek.progress = preferences.dynamicIslandTopDp
         islandSwitch.setOnCheckedChangeListener { _, enabled ->
             preferences.isDynamicIslandEnabled = enabled
@@ -78,8 +78,8 @@ class OverlayAvatarActivity : AppCompatActivity() {
                 )
             }
         }
-        widthSeek.setOnSeekBarChangeListener(simpleSeekListener { preferences.dynamicIslandWidthDp = 220 + it })
-        heightSeek.setOnSeekBarChangeListener(simpleSeekListener { preferences.dynamicIslandHeightDp = 42 + it })
+        widthSeek.setOnSeekBarChangeListener(simpleSeekListener { preferences.dynamicIslandWidthDp = 170 + it })
+        heightSeek.setOnSeekBarChangeListener(simpleSeekListener { preferences.dynamicIslandHeightDp = 44 + it })
         topSeek.setOnSeekBarChangeListener(simpleSeekListener { preferences.dynamicIslandTopDp = it })
         avatarGallery = findViewById(R.id.avatarGallery)
         assetLoader = WebViewAssetLoader.Builder()

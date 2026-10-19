@@ -306,7 +306,7 @@ class DynamicIslandOverlay(private val context: Context) {
     }
 
     private fun applySize() {
-        val compactHeight = max(dp(JarvisApp.instance.preferences.dynamicIslandHeightDp), dp(52))
+        val compactHeight = max(dp(JarvisApp.instance.preferences.dynamicIslandHeightDp), dp(44))
         shell.minimumHeight = if (expanded) 0 else compactHeight
         params.height = if (expanded) WindowManager.LayoutParams.WRAP_CONTENT else compactHeight
     }

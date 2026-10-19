@@ -108,9 +108,9 @@
                 android:textSize="11sp" />
 
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Genişlik" android:textColor="?attr/themeTextPrimary" android:layout_marginTop="8dp" />
-            <SeekBar android:id="@+id/seekDynamicIslandWidth" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="280" />
+            <SeekBar android:id="@+id/seekDynamicIslandWidth" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="220" />
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Yükseklik" android:textColor="?attr/themeTextPrimary" />
-            <SeekBar android:id="@+id/seekDynamicIslandHeight" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="118" />
+            <SeekBar android:id="@+id/seekDynamicIslandHeight" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="76" />
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Üst boşluk" android:textColor="?attr/themeTextPrimary" />
             <SeekBar android:id="@+id/seekDynamicIslandTop" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="120" />
         </LinearLayout>

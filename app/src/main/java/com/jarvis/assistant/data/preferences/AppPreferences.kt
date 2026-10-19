@@ -373,12 +373,12 @@ class AppPreferences(context: Context) {
         set(value) = prefs.edit().putBoolean(KEY_DYNAMIC_ISLAND_ENABLED, value).apply()
 
     var dynamicIslandWidthDp: Int
-        get() = prefs.getInt(KEY_DYNAMIC_ISLAND_WIDTH, 340).coerceIn(220, 500)
-        set(value) = prefs.edit().putInt(KEY_DYNAMIC_ISLAND_WIDTH, value.coerceIn(220, 500)).apply()
+        get() = prefs.getInt(KEY_DYNAMIC_ISLAND_WIDTH, 230).coerceIn(170, 390)
+        set(value) = prefs.edit().putInt(KEY_DYNAMIC_ISLAND_WIDTH, value.coerceIn(170, 390)).apply()
 
     var dynamicIslandHeightDp: Int
-        get() = prefs.getInt(KEY_DYNAMIC_ISLAND_HEIGHT, 58).coerceIn(42, 160)
-        set(value) = prefs.edit().putInt(KEY_DYNAMIC_ISLAND_HEIGHT, value.coerceIn(42, 160)).apply()
+        get() = prefs.getInt(KEY_DYNAMIC_ISLAND_HEIGHT, 52).coerceIn(44, 120)
+        set(value) = prefs.edit().putInt(KEY_DYNAMIC_ISLAND_HEIGHT, value.coerceIn(44, 120)).apply()
 
     var dynamicIslandTopDp: Int
         get() = prefs.getInt(KEY_DYNAMIC_ISLAND_TOP, 5).coerceIn(0, 120)
