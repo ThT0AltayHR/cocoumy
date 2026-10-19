@@ -190,7 +190,7 @@ class DynamicIslandOverlay(private val context: Context) {
 
         val presentation = presentationFor(state, isSessionOn, isStandby, userText, assistantText)
         val details = Triple("●", presentation.title, presentation.message)
-        mood.setImageResource(emoteResource(state, isSessionOn))
+        mood.setImageResource(emoteResource(presentation.view, isSessionOn))
         mood.contentDescription = "HelloAI ${presentation.emote.assetName} emote"
         mood.imageTintList = android.content.res.ColorStateList.valueOf(
             if (isSessionOn) Color.rgb(74, 230, 142) else Color.rgb(236, 80, 88)
@@ -208,13 +208,14 @@ class DynamicIslandOverlay(private val context: Context) {
         try { windowManager.updateViewLayout(shell, params) } catch (_: Exception) {}
     }
 
-    private fun emoteResource(state: ConversationState, isSessionOn: Boolean): Int {
+    private fun emoteResource(view: IslandView, isSessionOn: Boolean): Int {
         if (!isSessionOn) return com.jarvis.assistant.R.drawable.ic_helloai_error
-        return when (state) {
-            ConversationState.LISTENING -> com.jarvis.assistant.R.drawable.ic_helloai_listening
-            ConversationState.THINKING -> com.jarvis.assistant.R.drawable.ic_helloai_thinking
-            ConversationState.SPEAKING -> com.jarvis.assistant.R.drawable.ic_helloai_finished
-            ConversationState.IDLE -> com.jarvis.assistant.R.drawable.ic_helloai_emote
+        return when (view) {
+            IslandView.LISTENING -> com.jarvis.assistant.R.drawable.ic_helloai_listening
+            IslandView.THINKING, IslandView.SEARCHING -> com.jarvis.assistant.R.drawable.ic_helloai_thinking
+            IslandView.ERROR -> com.jarvis.assistant.R.drawable.ic_helloai_error
+            IslandView.FINISHED, IslandView.SPEAKING -> com.jarvis.assistant.R.drawable.ic_helloai_finished
+            else -> com.jarvis.assistant.R.drawable.ic_helloai_emote
         }
     }
 
@@ -233,14 +234,24 @@ class DynamicIslandOverlay(private val context: Context) {
             return IslandPresentation(IslandMode.COMPACT, IslandView.EMPTY, IslandEmote.TIRED,
                 "ÇEVRİMDIŞI", "Canlı asistan kapalı.")
         }
-        return when (state) {
-            ConversationState.LISTENING -> IslandPresentation(IslandMode.EXPANDED, IslandView.LISTENING, IslandEmote.LISTENING,
+        return when (IslandStateMachine.classify(state, userText, assistantText)) {
+            IslandView.APPROVAL -> IslandPresentation(IslandMode.EXPANDED, IslandView.APPROVAL, IslandEmote.QUESTION,
+                "ONAY GEREKİYOR", assistantText.ifBlank { "Bu işlem için onayını bekliyorum." })
+            IslandView.ERROR -> IslandPresentation(IslandMode.EXPANDED, IslandView.ERROR, IslandEmote.ERROR,
+                "İŞLEMDE HATA", assistantText.ifBlank { "İşlem tamamlanamadı." })
+            IslandView.QUESTION -> IslandPresentation(IslandMode.EXPANDED, IslandView.QUESTION, IslandEmote.QUESTION,
+                "SEÇİM GEREKİYOR", assistantText.ifBlank { "Nasıl devam edelim?" })
+            IslandView.SEARCHING -> IslandPresentation(IslandMode.EXPANDED, IslandView.SEARCHING, IslandEmote.THINKING,
+                "ARANIYOR", assistantText.ifBlank { "Sonuçlar inceleniyor…" })
+            IslandView.LISTENING -> IslandPresentation(IslandMode.EXPANDED, IslandView.LISTENING, IslandEmote.LISTENING,
                 "CANLI SOHBET", userText.ifBlank { "Seni dinliyorum." })
-            ConversationState.THINKING -> IslandPresentation(IslandMode.EXPANDED, IslandView.THINKING, IslandEmote.THINKING,
+            IslandView.THINKING -> IslandPresentation(IslandMode.EXPANDED, IslandView.THINKING, IslandEmote.THINKING,
                 "DÜŞÜNÜYOR", assistantText.ifBlank { "İsteğini değerlendiriyorum…" })
-            ConversationState.SPEAKING -> IslandPresentation(IslandMode.EXPANDED, IslandView.SPEAKING, IslandEmote.PROUD,
+            IslandView.SPEAKING -> IslandPresentation(IslandMode.EXPANDED, IslandView.SPEAKING, IslandEmote.PROUD,
                 "YANITLIYOR", assistantText.ifBlank { "Yanıt hazırlanıyor…" })
-            ConversationState.IDLE -> IslandPresentation(IslandMode.COMPACT, IslandView.OVERVIEW, IslandEmote.CALM,
+            IslandView.FINISHED -> IslandPresentation(IslandMode.COMPACT, IslandView.FINISHED, IslandEmote.FINISHED,
+                "TAMAMLANDI", assistantText.takeIf { it.isNotBlank() } ?: "İşlem tamamlandı.")
+            else -> IslandPresentation(IslandMode.COMPACT, IslandView.OVERVIEW, IslandEmote.CALM,
                 "HAZIR", "Bağlantı hazır.")
         }
     }
