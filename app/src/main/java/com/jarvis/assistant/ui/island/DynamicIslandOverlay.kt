@@ -15,6 +15,7 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.ImageView
 import com.jarvis.assistant.background.JarvisConversationService
 import com.jarvis.assistant.data.model.ConversationState
 import com.jarvis.assistant.JarvisApp
@@ -52,11 +53,10 @@ class DynamicIslandOverlay(private val context: Context) {
         orientation = LinearLayout.HORIZONTAL
         gravity = Gravity.CENTER_VERTICAL
     }
-    private val mood = TextView(context).apply {
-        text = "●"
-        textSize = 20f
+    private val mood = ImageView(context).apply {
+        setImageResource(com.jarvis.assistant.R.drawable.ic_helloai_emote)
         gravity = Gravity.CENTER
-        setTextColor(Color.WHITE)
+        scaleType = ImageView.ScaleType.CENTER_INSIDE
     }
     private val titleColumn = LinearLayout(context).apply {
         orientation = LinearLayout.VERTICAL
@@ -190,9 +190,11 @@ class DynamicIslandOverlay(private val context: Context) {
 
         val presentation = presentationFor(state, isSessionOn, isStandby, userText, assistantText)
         val details = Triple("●", presentation.title, presentation.message)
-        mood.text = details.first
+        mood.setImageResource(com.jarvis.assistant.R.drawable.ic_helloai_emote)
         mood.contentDescription = "HelloAI ${presentation.emote.assetName} emote"
-        mood.setTextColor(if (isSessionOn) Color.rgb(74, 230, 142) else Color.rgb(236, 80, 88))
+        mood.imageTintList = android.content.res.ColorStateList.valueOf(
+            if (isSessionOn) Color.rgb(74, 230, 142) else Color.rgb(236, 80, 88)
+        )
         stateLabel.text = details.second
         updatePulse(state == ConversationState.THINKING || state == ConversationState.LISTENING || expanded)
         val latest = assistantText.trim().ifBlank { details.third }
