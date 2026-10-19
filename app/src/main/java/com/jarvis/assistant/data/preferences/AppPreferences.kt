@@ -239,7 +239,7 @@ class AppPreferences(context: Context) {
     var userName: String
         get() {
             val name = prefs.getString(KEY_USER_NAME, "") ?: ""
-            return if (name.isBlank() || name == "Salaam" || name == "TechGPT X" || name == "Rehaan") "Altay" else name
+            return if (name.isBlank() || name == "Salaam" || name == "HelloAI" || name == "Rehaan") "Altay" else name
         }
         set(value) {
             prefs.edit().putString(KEY_USER_NAME, value.trim()).commit()

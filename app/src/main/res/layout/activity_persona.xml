@@ -371,7 +371,7 @@
                     android:focusable="false" />
             </LinearLayout>
 
-            <!-- 4. TechGPT X Mode -->
+            <!-- 4. HelloAI Mode -->
             <LinearLayout
                 android:id="@+id/cardPersonaTechGpt"
                 android:layout_width="match_parent"
