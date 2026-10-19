@@ -42,10 +42,12 @@ jobs:
 
       - name: Türkçe uyandırma modelini hazırla
         run: |
-          bash tools/fetch_turkish_wake_model.sh
-          test -s app/src/main/assets/model-tr/am/final.mdl
-          # Turkish wake support replaces the inherited English model in CI to keep APK size down.
-          rm -rf app/src/main/assets/model-en-us
+          if bash tools/fetch_turkish_wake_model.sh && test -s app/src/main/assets/model-tr/am/final.mdl; then
+            # Turkish wake support replaces the inherited English model in CI to keep APK size down.
+            rm -rf app/src/main/assets/model-en-us
+          else
+            echo "Turkish Vosk model unavailable; keeping the bundled English fallback."
+          fi
 
       - name: Hata ayıklama APK'sı derle
         run: ./gradlew --no-daemon :app:assembleDebug
