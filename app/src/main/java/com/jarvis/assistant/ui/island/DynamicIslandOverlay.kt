@@ -20,6 +20,7 @@ import com.jarvis.assistant.background.JarvisConversationService
 import com.jarvis.assistant.data.model.ConversationState
 import com.jarvis.assistant.JarvisApp
 import com.jarvis.assistant.ui.home.MainActivity
+import kotlin.math.max
 import kotlin.math.min
 
 /**
@@ -189,13 +190,18 @@ class DynamicIslandOverlay(private val context: Context) {
         }
 
         val presentation = presentationFor(state, isSessionOn, isStandby, userText, assistantText)
+        if (presentation.view in setOf(IslandView.APPROVAL, IslandView.QUESTION, IslandView.ERROR)) {
+            expanded = true
+        }
+        applySize()
         val details = Triple("●", presentation.title, presentation.message)
         mood.setImageResource(emoteResource(presentation.view, isSessionOn))
         mood.contentDescription = "HelloAI ${presentation.emote.assetName} emote"
         mood.imageTintList = android.content.res.ColorStateList.valueOf(
-            if (isSessionOn) Color.rgb(74, 230, 142) else Color.rgb(236, 80, 88)
+            islandAccent(presentation.view, isSessionOn)
         )
         stateLabel.text = details.second
+        stateLabel.setTextColor(islandAccent(presentation.view, isSessionOn))
         updatePulse(state == ConversationState.THINKING || state == ConversationState.LISTENING || expanded)
         val latest = assistantText.trim().ifBlank { details.third }
         lastAssistantText = latest
@@ -216,6 +222,17 @@ class DynamicIslandOverlay(private val context: Context) {
             IslandView.ERROR -> com.jarvis.assistant.R.drawable.ic_helloai_error
             IslandView.FINISHED, IslandView.SPEAKING -> com.jarvis.assistant.R.drawable.ic_helloai_finished
             else -> com.jarvis.assistant.R.drawable.ic_helloai_emote
+        }
+    }
+
+    private fun islandAccent(view: IslandView, isSessionOn: Boolean): Int {
+        if (!isSessionOn) return Color.rgb(236, 80, 88)
+        return when (view) {
+            IslandView.ERROR -> Color.rgb(236, 80, 88)
+            IslandView.APPROVAL, IslandView.QUESTION -> Color.rgb(249, 190, 64)
+            IslandView.SEARCHING, IslandView.THINKING -> Color.rgb(118, 163, 255)
+            IslandView.FINISHED -> Color.rgb(74, 230, 142)
+            else -> Color.rgb(74, 230, 142)
         }
     }
 
@@ -284,7 +301,14 @@ class DynamicIslandOverlay(private val context: Context) {
         actionRow.visibility = if (expanded) View.VISIBLE else View.GONE
         message.maxLines = if (expanded) 6 else 2
         expandButton.text = if (expanded) "⌃" else "⌄"
+        applySize()
         try { if (attached) windowManager.updateViewLayout(shell, params) } catch (_: Exception) {}
+    }
+
+    private fun applySize() {
+        val compactHeight = max(dp(JarvisApp.instance.preferences.dynamicIslandHeightDp), dp(52))
+        shell.minimumHeight = if (expanded) 0 else compactHeight
+        params.height = if (expanded) WindowManager.LayoutParams.WRAP_CONTENT else compactHeight
     }
 
     private fun actionButton(label: String, primary: Boolean) = TextView(context).apply {
