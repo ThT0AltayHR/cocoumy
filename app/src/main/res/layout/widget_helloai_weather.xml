@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widgetWeatherRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_jarvis_dock">
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="HELLOAI · HAVA" android:textColor="#F4F6FF" android:textStyle="bold" android:textSize="14sp" />
+    <TextView android:id="@+id/weatherTemperature" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="--°C" android:textColor="#9FE7B8" android:textSize="28sp" android:textStyle="bold" />
+    <TextView android:id="@+id/weatherCondition" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Konum izni bekleniyor" android:textColor="#C6D0E5" android:textSize="12sp" android:maxLines="2" />
+    <TextView android:id="@+id/weatherDetails" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="" android:textColor="#8E99B1" android:textSize="11sp" android:maxLines="2" />
+</LinearLayout>
