@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      ANDROID_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      ANDROID_KEYSTORE_B64: ${{ secrets.COUCOU_KEYSTORE_BASE64 }}
     steps:
       - name: Kaynak kodu al
         uses: actions/checkout@v4
@@ -66,9 +66,9 @@ jobs:
         shell: bash
         env:
           KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          KEYSTORE_PASSWORD: ${{ secrets.COUCOU_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.COUCOU_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.COUCOU_KEY_PASSWORD }}
         run: |
           set -euo pipefail
           test -n "$KEYSTORE_PASSWORD" || (echo 'ANDROID_KEYSTORE_PASSWORD secret eksik.' && exit 1)
@@ -81,28 +81,32 @@ jobs:
           echo "cert_sha256=$FINGERPRINT" >> "$GITHUB_OUTPUT"
 
       - name: Release APK'sını imzalı olarak derle
-        if: ${{ env.ANDROID_KEYSTORE_B64 != '' }}
         env:
           JARVIS_RELEASE_STORE_FILE: ${{ github.workspace }}/coucou-release.jks
-          JARVIS_RELEASE_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          JARVIS_RELEASE_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          JARVIS_RELEASE_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          JARVIS_RELEASE_STORE_PASSWORD: ${{ secrets.COUCOU_KEYSTORE_PASSWORD }}
+          JARVIS_RELEASE_KEY_ALIAS: ${{ secrets.COUCOU_KEY_ALIAS }}
+          JARVIS_RELEASE_KEY_PASSWORD: ${{ secrets.COUCOU_KEY_PASSWORD }}
           JARVIS_RELEASE_CERT_SHA256: ${{ steps.signing.outputs.cert_sha256 }}
-          JARVIS_DEVELOPER_NAME: ${{ secrets.APP_DEVELOPER_NAME }}
-          JARVIS_COPYRIGHT_OWNER: ${{ secrets.APP_COPYRIGHT_OWNER }}
-        run: ./gradlew --no-daemon :app:assembleRelease
+          JARVIS_DEVELOPER_NAME: Muhammed
+          JARVIS_COPYRIGHT_OWNER: TECHGPTX
+        run: |
+          if [ -n "$ANDROID_KEYSTORE_B64" ]; then
+            ./gradlew --no-daemon :app:assembleRelease
+          else
+            echo "No release keystore configured; producing an unsigned release APK."
+            ./gradlew --no-daemon :app:assembleRelease
+          fi
 
-      - name: İmzalı Release APK'sını yükle
-        if: ${{ env.ANDROID_KEYSTORE_B64 != '' }}
+      - name: Release APK'sını yükle
         uses: actions/upload-artifact@v4
         with:
-          name: coucou-ai-release-apk
+          name: helloai-v1.8.8-release-apk
           path: app/build/outputs/apk/release/*.apk
           if-no-files-found: error
           retention-days: 30
 
       - name: Etiketli sürümü GitHub Release olarak yayımla
-        if: ${{ startsWith(github.ref, 'refs/tags/v') && env.ANDROID_KEYSTORE_B64 != '' }}
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
         uses: softprops/action-gh-release@v2
         with:
           files: app/build/outputs/apk/release/*.apk

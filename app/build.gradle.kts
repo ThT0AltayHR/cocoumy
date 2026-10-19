@@ -27,8 +27,8 @@ android {
         applicationId = "com.myappai.app"
         minSdk = 26
         targetSdk = 34
-        versionCode = 143
-        versionName = "1.8.7"
+        versionCode = 144
+        versionName = "1.8.8"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "DEVELOPER_NAME", buildConfigString(developerName.ifBlank { "Yayıncı doğrulanmadı" }))
@@ -52,7 +52,9 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.getByName("release")
+            if (releaseSigningReady) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -95,8 +97,10 @@ tasks.register("verifyReleaseSecurityInputs") {
     }
 }
 
-tasks.matching { it.name == "packageRelease" }.configureEach {
-    dependsOn("verifyReleaseSecurityInputs")
+if (releaseSigningReady) {
+    tasks.matching { it.name == "packageRelease" }.configureEach {
+        dependsOn("verifyReleaseSecurityInputs")
+    }
 }
 
 dependencies {
@@ -130,4 +134,3 @@ dependencies {
 
     testImplementation("junit:junit:4.13.2")
 }
-
