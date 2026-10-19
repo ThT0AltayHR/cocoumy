@@ -12,6 +12,8 @@ import android.widget.RadioGroup
 import android.widget.Spinner
 import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewClientCompat
+import androidx.core.content.ContextCompat
+import com.jarvis.assistant.background.JarvisConversationService
 import com.jarvis.assistant.JarvisApp
 import com.jarvis.assistant.R
 import com.jarvis.assistant.util.ThemeManager
@@ -67,7 +69,15 @@ class OverlayAvatarActivity : AppCompatActivity() {
         widthSeek.progress = preferences.dynamicIslandWidthDp - 220
         heightSeek.progress = preferences.dynamicIslandHeightDp - 42
         topSeek.progress = preferences.dynamicIslandTopDp
-        islandSwitch.setOnCheckedChangeListener { _, enabled -> preferences.isDynamicIslandEnabled = enabled }
+        islandSwitch.setOnCheckedChangeListener { _, enabled ->
+            preferences.isDynamicIslandEnabled = enabled
+            if (enabled) {
+                ContextCompat.startForegroundService(
+                    this,
+                    android.content.Intent(this, JarvisConversationService::class.java)
+                )
+            }
+        }
         widthSeek.setOnSeekBarChangeListener(simpleSeekListener { preferences.dynamicIslandWidthDp = 220 + it })
         heightSeek.setOnSeekBarChangeListener(simpleSeekListener { preferences.dynamicIslandHeightDp = 42 + it })
         topSeek.setOnSeekBarChangeListener(simpleSeekListener { preferences.dynamicIslandTopDp = it })
