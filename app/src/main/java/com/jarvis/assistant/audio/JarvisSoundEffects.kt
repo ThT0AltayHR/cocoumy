@@ -3,6 +3,7 @@ package com.jarvis.assistant.audio
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
+import android.content.Context
 import android.util.Log
 import kotlin.math.PI
 import kotlin.math.sin
@@ -18,6 +19,32 @@ object JarvisSoundEffects {
 
     private val wakeSoundPcm: ByteArray by lazy { generateWakeSound() }
     private val standbySoundPcm: ByteArray by lazy { generateStandbySound() }
+
+    private val moodAssets = setOf(
+        "annoyed", "approval", "approve", "attach", "blip", "close", "dizzy", "error",
+        "finish", "greet", "greeting", "gulp", "hover", "love", "open", "peek", "pop",
+        "proud", "question", "rate", "search", "send", "slap", "sleep", "think", "tick",
+        "wink", "work", "yawn"
+    )
+
+    /** Plays one of the mood/emote sounds shipped from the macOS sound bank. */
+    fun playMood(context: Context, mood: String) {
+        val safeMood = mood.lowercase().replace(Regex("[^a-z]"), "")
+        if (safeMood !in moodAssets) return
+        try {
+            val descriptor = context.assets.openFd("coucou-macos-sounds/$safeMood.wav")
+            val player = android.media.MediaPlayer().apply {
+                setDataSource(descriptor.fileDescriptor, descriptor.startOffset, descriptor.length)
+                setOnCompletionListener { it.release() }
+                setOnErrorListener { mediaPlayer, _, _ -> mediaPlayer.release(); true }
+                prepare()
+                start()
+            }
+            descriptor.close()
+        } catch (error: Exception) {
+            Log.w(TAG, "Could not play mood sound $safeMood: ${error.message}")
+        }
+    }
 
     /**
      * Futuristic ascending dual-tone chime when JARVIS wakes up or comes out of background.

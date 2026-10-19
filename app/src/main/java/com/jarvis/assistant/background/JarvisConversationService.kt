@@ -459,6 +459,12 @@ class JarvisConversationService : Service() {
     private fun setConversationState(state: ConversationState) {
         if (_conversationState.value != state) {
             _conversationState.value = state
+            when (state) {
+                ConversationState.THINKING -> JarvisSoundEffects.playMood(this, "think")
+                ConversationState.SPEAKING -> JarvisSoundEffects.playMood(this, "greeting")
+                ConversationState.IDLE -> if (_isSessionOn.value) JarvisSoundEffects.playMood(this, "finish")
+                else -> Unit
+            }
             updateNotification()
         }
     }
