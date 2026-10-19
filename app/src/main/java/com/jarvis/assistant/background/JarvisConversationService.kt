@@ -39,6 +39,7 @@ import com.jarvis.assistant.data.model.ConversationState
 import com.jarvis.assistant.network.GeminiLiveWebSocket
 import com.jarvis.assistant.ui.home.MainActivity
 import com.jarvis.assistant.ui.island.DynamicIslandOverlay
+import com.jarvis.assistant.audio.JarvisSoundEffects
 import com.jarvis.assistant.widget.CoucouWidgetProvider
 import com.jarvis.assistant.util.PermissionHelper
 import com.jarvis.assistant.util.PromptGenerator

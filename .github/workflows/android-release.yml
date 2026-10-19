@@ -100,7 +100,7 @@ jobs:
       - name: Release APK'sını yükle
         uses: actions/upload-artifact@v4
         with:
-          name: helloai-v1.8.12-release-apk
+          name: helloai-v1.8.13-release-apk
           path: app/build/outputs/apk/release/*.apk
           if-no-files-found: error
           retention-days: 30
