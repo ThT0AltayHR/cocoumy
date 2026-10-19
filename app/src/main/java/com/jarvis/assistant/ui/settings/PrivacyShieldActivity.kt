@@ -31,11 +31,11 @@ class PrivacyShieldActivity : AppCompatActivity() {
         }
 
         binding.btnJoinInstagram.setOnClickListener {
-            openUrl("https://www.instagram.com/techgptx.ai")
+            openUrl("https://t.me/AltayHR")
         }
 
         binding.btnJoinYoutube.setOnClickListener {
-            openUrl("https://youtube.com/@TechGptX")
+            openUrl("https://t.me/AltayHR")
         }
     }
 

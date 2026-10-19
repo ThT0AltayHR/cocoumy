@@ -555,7 +555,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="HELLOAI • TECHGPTX\nDeveloper: Muhammed • Local privacy"
+                android:text="HELLOAI\nDeveloper: Muhammed • Local privacy"
                 android:textColor="?attr/themeTextMuted"
                 android:textSize="11.5sp"
                 android:lineSpacingExtra="3dp"

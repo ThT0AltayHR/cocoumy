@@ -1,6 +1,6 @@
 # HelloAI for Android
 
-**HelloAI**, TECHGPTX markası altında geliştirilen, sesli etkileşim ve cihaz otomasyonu özelliklerini tek bir yardımcı deneyiminde birleştiren Android asistanıdır.
+**HelloAI**, Muhammed tarafından geliştirilen, sesli etkileşim ve cihaz otomasyonu özelliklerini tek bir yardımcı deneyiminde birleştiren Android asistanıdır.
 
 Geliştirici: **Muhammed**
 
@@ -69,6 +69,6 @@ API anahtarlarını GitHub’a, APK’ya veya kaynak dosyalarına sabitlemeyin. 
 
 Bu proje, Android port kaynaklarını ve gerekli yardımcı dosyaları içerir. Dağıtım veya ticari kullanım öncesinde kullanılan özgün kaynakların lisanslarını ve üçüncü taraf bildirimlerini inceleyin. Ayrıntılar için `ATTRIBUTION_AND_LICENSES.md` dosyasına bakın.
 
-## TECHGPTX iletişim kanalları
+## İletişim
 
-Uygulama içindeki YouTube, Instagram ve Telegram düğmeleri TECHGPTX topluluk bağlantılarına yönlendirir. Marka ve geliştirici kredisi: **TECHGPTX — Muhammed**.
+Geliştirici: **Muhammed**
