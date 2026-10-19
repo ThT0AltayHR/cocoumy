@@ -92,6 +92,47 @@
             android:orientation="vertical"
             android:padding="14dp">
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchDynamicIslandEnabled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Dinamik çentiği göster"
+                android:textColor="?attr/themeTextPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Konum, genişlik ve yükseklik aşağıdaki kaydırıcılardan ayarlanır."
+                android:textColor="?attr/themeTextMuted"
+                android:textSize="11sp" />
+
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Genişlik" android:textColor="?attr/themeTextPrimary" android:layout_marginTop="8dp" />
+            <SeekBar android:id="@+id/seekDynamicIslandWidth" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="280" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Yükseklik" android:textColor="?attr/themeTextPrimary" />
+            <SeekBar android:id="@+id/seekDynamicIslandHeight" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="118" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Üst boşluk" android:textColor="?attr/themeTextPrimary" />
+            <SeekBar android:id="@+id/seekDynamicIslandTop" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="120" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="12dp"
+        app:cardBackgroundColor="?attr/themeCardBg"
+        app:strokeColor="?attr/themeCardBorder"
+        app:strokeWidth="1dp"
+        app:cardCornerRadius="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="14dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

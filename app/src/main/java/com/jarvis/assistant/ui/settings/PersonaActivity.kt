@@ -103,7 +103,7 @@ class PersonaActivity : AppCompatActivity() {
         val persona = when (currentSelectedPersona) {
             GeminiConstants.PERSONALITY_GIRLFRIEND -> "Pari"
             GeminiConstants.PERSONALITY_BOYFRIEND -> "Kabir"
-            GeminiConstants.PERSONALITY_TECHGPT_X -> "TechGPT X"
+            GeminiConstants.PERSONALITY_TECHGPT_X -> "HelloAI"
             else -> "Jarvis Pro"
         }
         val operator = binding.etUserName.text?.toString()?.trim().takeUnless { it.isNullOrBlank() } ?: "TechGPT X"
@@ -147,7 +147,7 @@ class PersonaActivity : AppCompatActivity() {
         val personaDisplayName = when (currentSelectedPersona) {
             GeminiConstants.PERSONALITY_GIRLFRIEND -> "Pari (Girlfriend Mode)"
             GeminiConstants.PERSONALITY_BOYFRIEND -> "Kabir (Boyfriend Mode)"
-            GeminiConstants.PERSONALITY_TECHGPT_X -> "TechGPT X Neural Core"
+            GeminiConstants.PERSONALITY_TECHGPT_X -> "HelloAI Neural Core"
             else -> "Jarvis Pro"
         }
 

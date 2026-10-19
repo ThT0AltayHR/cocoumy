@@ -17,6 +17,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.jarvis.assistant.background.JarvisConversationService
 import com.jarvis.assistant.data.model.ConversationState
+import com.jarvis.assistant.JarvisApp
 import com.jarvis.assistant.ui.home.MainActivity
 import kotlin.math.min
 
@@ -110,7 +111,7 @@ class DynamicIslandOverlay(private val context: Context) {
     private val stopButton = actionButton("Canlıyı kapat", false)
 
     private val params = WindowManager.LayoutParams(
-        min(dp(340), context.resources.displayMetrics.widthPixels - dp(20)),
+        min(dp(JarvisApp.instance.preferences.dynamicIslandWidthDp), context.resources.displayMetrics.widthPixels - dp(20)),
         WindowManager.LayoutParams.WRAP_CONTENT,
         WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
@@ -119,7 +120,7 @@ class DynamicIslandOverlay(private val context: Context) {
         android.graphics.PixelFormat.TRANSLUCENT
     ).apply {
         gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-        y = statusBarHeight() + dp(5)
+        y = statusBarHeight() + dp(JarvisApp.instance.preferences.dynamicIslandTopDp)
     }
 
     private var attached = false
@@ -164,10 +165,12 @@ class DynamicIslandOverlay(private val context: Context) {
         assistantText: String,
         enabled: Boolean
     ) {
-        if (!enabled || !Settings.canDrawOverlays(context)) {
+        if (!enabled || !JarvisApp.instance.preferences.isDynamicIslandEnabled || !Settings.canDrawOverlays(context)) {
             remove()
             return
         }
+        params.width = min(dp(JarvisApp.instance.preferences.dynamicIslandWidthDp), context.resources.displayMetrics.widthPixels - dp(20))
+        params.y = statusBarHeight() + dp(JarvisApp.instance.preferences.dynamicIslandTopDp)
         if (!attached) {
             try {
                 windowManager.addView(shell, params)

@@ -69,6 +69,10 @@ class AppPreferences(context: Context) {
         private const val KEY_TASK_OVERLAY_FREE_POSITION = "key_task_overlay_free_position"
         private const val KEY_TASK_OVERLAY_X = "key_task_overlay_x"
         private const val KEY_TASK_OVERLAY_Y = "key_task_overlay_y"
+        private const val KEY_DYNAMIC_ISLAND_ENABLED = "key_dynamic_island_enabled"
+        private const val KEY_DYNAMIC_ISLAND_WIDTH = "key_dynamic_island_width"
+        private const val KEY_DYNAMIC_ISLAND_HEIGHT = "key_dynamic_island_height"
+        private const val KEY_DYNAMIC_ISLAND_TOP = "key_dynamic_island_top"
         private const val KEY_APP_THEME = "key_app_theme"
         private const val KEY_CUSTOM_THEME_COLOR = "key_custom_theme_color"
         private const val KEY_ORB_ANIMATION = "key_orb_animation"
@@ -363,6 +367,22 @@ class AppPreferences(context: Context) {
     var taskOverlayY: Int
         get() = prefs.getInt(KEY_TASK_OVERLAY_Y, -1)
         set(value) = prefs.edit().putInt(KEY_TASK_OVERLAY_Y, value.coerceAtLeast(0)).apply()
+
+    var isDynamicIslandEnabled: Boolean
+        get() = prefs.getBoolean(KEY_DYNAMIC_ISLAND_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(KEY_DYNAMIC_ISLAND_ENABLED, value).apply()
+
+    var dynamicIslandWidthDp: Int
+        get() = prefs.getInt(KEY_DYNAMIC_ISLAND_WIDTH, 340).coerceIn(220, 500)
+        set(value) = prefs.edit().putInt(KEY_DYNAMIC_ISLAND_WIDTH, value.coerceIn(220, 500)).apply()
+
+    var dynamicIslandHeightDp: Int
+        get() = prefs.getInt(KEY_DYNAMIC_ISLAND_HEIGHT, 58).coerceIn(42, 160)
+        set(value) = prefs.edit().putInt(KEY_DYNAMIC_ISLAND_HEIGHT, value.coerceIn(42, 160)).apply()
+
+    var dynamicIslandTopDp: Int
+        get() = prefs.getInt(KEY_DYNAMIC_ISLAND_TOP, 5).coerceIn(0, 120)
+        set(value) = prefs.edit().putInt(KEY_DYNAMIC_ISLAND_TOP, value.coerceIn(0, 120)).apply()
 
     fun getSongPlayCounts(): MutableMap<String, Int> {
         val json = prefs.getString(KEY_SONG_COUNTS, null) ?: return mutableMapOf()

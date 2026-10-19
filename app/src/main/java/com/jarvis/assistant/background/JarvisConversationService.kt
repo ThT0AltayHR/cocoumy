@@ -529,7 +529,7 @@ class JarvisConversationService : Service() {
                     state.standbyOn,
                     state.userText,
                     state.assistantText,
-                    enabled = true
+                    enabled = JarvisApp.instance.preferences.isDynamicIslandEnabled
                 )
                 val widgetStatus = when {
                     state.standbyOn && !state.sessionOn -> "Uyandırma sözcüğü bekleniyor"

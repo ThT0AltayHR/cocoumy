@@ -59,11 +59,29 @@ class OverlayAvatarActivity : AppCompatActivity() {
             edgeSpinner.isEnabled = enabled
             for (i in 0 until modeGroup.childCount) modeGroup.getChildAt(i).isEnabled = enabled
         }
+        val islandSwitch = findViewById<SwitchCompat>(R.id.switchDynamicIslandEnabled)
+        val widthSeek = findViewById<android.widget.SeekBar>(R.id.seekDynamicIslandWidth)
+        val heightSeek = findViewById<android.widget.SeekBar>(R.id.seekDynamicIslandHeight)
+        val topSeek = findViewById<android.widget.SeekBar>(R.id.seekDynamicIslandTop)
+        islandSwitch.isChecked = preferences.isDynamicIslandEnabled
+        widthSeek.progress = preferences.dynamicIslandWidthDp - 220
+        heightSeek.progress = preferences.dynamicIslandHeightDp - 42
+        topSeek.progress = preferences.dynamicIslandTopDp
+        islandSwitch.setOnCheckedChangeListener { _, enabled -> preferences.isDynamicIslandEnabled = enabled }
+        widthSeek.setOnSeekBarChangeListener(simpleSeekListener { preferences.dynamicIslandWidthDp = 220 + it })
+        heightSeek.setOnSeekBarChangeListener(simpleSeekListener { preferences.dynamicIslandHeightDp = 42 + it })
+        topSeek.setOnSeekBarChangeListener(simpleSeekListener { preferences.dynamicIslandTopDp = it })
         avatarGallery = findViewById(R.id.avatarGallery)
         assetLoader = WebViewAssetLoader.Builder()
             .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
             .build()
         setupGallery()
+    }
+
+    private fun simpleSeekListener(onChanged: (Int) -> Unit) = object : android.widget.SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: android.widget.SeekBar?, progress: Int, fromUser: Boolean) = onChanged(progress)
+        override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) = Unit
+        override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) = Unit
     }
 
     @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
