@@ -47,11 +47,23 @@ class CoucouWidgetProvider : AppWidgetProvider() {
             val pending = PendingIntent.getActivity(context, id, openIntent, flags)
             val views = RemoteViews(context.packageName, R.layout.widget_coucou_status).apply {
                 setTextViewText(R.id.widgetStatus, status)
+                setTextViewText(R.id.widgetMood, moodForStatus(status))
                 setTextViewText(R.id.widgetWeather, weather)
                 setOnClickPendingIntent(R.id.widgetRoot, pending)
                 setOnClickPendingIntent(R.id.widgetOpenChat, pending)
             }
             manager.updateAppWidget(id, views)
+        }
+
+        private fun moodForStatus(status: String): String {
+            val normalized = status.lowercase()
+            return when {
+                "dinliyor" in normalized -> "Ruh hâli: dikkatli"
+                "düşünüyor" in normalized || "düşün" in normalized -> "Ruh hâli: odaklı"
+                "yanıt" in normalized -> "Ruh hâli: konuşuyor"
+                "hata" in normalized -> "Ruh hâli: üzgün"
+                else -> "Ruh hâli: sakin"
+            }
         }
     }
 }
