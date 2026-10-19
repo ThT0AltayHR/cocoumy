@@ -28,6 +28,8 @@ jobs:
 
       - name: Android SDK kur
         uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
 
       - name: SDK platformlarını kur
         run: sdkmanager "platforms;android-35" "build-tools;35.0.0" "platform-tools"
