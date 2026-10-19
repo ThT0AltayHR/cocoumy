@@ -1,16 +1,15 @@
 package com.jarvis.assistant.security
 
 /**
- * Permanent Developer Identity — Tech GPTx
- * TAMCL v1.0 License: Content creators MUST credit Tech GPTx in any video using this code.
+ * Official product identity and developer credits for HelloAI.
  */
 object DeveloperInfo {
-    const val DEVELOPER_NAME      = "Tech GPTx"
+    const val DEVELOPER_NAME      = "Muhammed"
     const val COPYRIGHT_YEAR      = "2026"
-    const val COPYRIGHT_NOTICE    = "© 2026 Tech GPTx. All Rights Reserved."
-    const val GITHUB_URL          = "https://github.com/techgptx/Playlist"
-    const val LICENSE             = "TAMCL v1.0"
-    const val LICENSE_DETAIL      = "Content creators MUST credit Tech GPTx in any video using this code."
+    const val COPYRIGHT_NOTICE    = "© 2026 TECHGPTX. Developer: Muhammed."
+    const val GITHUB_URL          = "https://github.com/ThT0AltayHR/cocoumy"
+    const val LICENSE             = "TECHGPTX Community License"
+    const val LICENSE_DETAIL      = "Developed by Muhammed for TECHGPTX."
     const val APP_OFFICIAL_ID     = "com.myappai.app"
-    const val VERIFIED_DEVELOPER  = "Tech GPTx — Official JARVIS Tutorial Series"
+    const val VERIFIED_DEVELOPER  = "TECHGPTX — Developer Muhammed"
 }

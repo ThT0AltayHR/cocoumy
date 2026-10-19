@@ -1,6 +1,10 @@
 # HelloAI for Android
 
-**HelloAI**, Android için tasarlanmış, sesli etkileşim ve cihaz otomasyonu özelliklerini tek bir yardımcı deneyiminde birleştiren bir asistan uygulamasıdır. Bu depo, HelloAI Android uygulamasının kaynak kodunu içerir.
+**HelloAI**, TECHGPTX markası altında geliştirilen, sesli etkileşim ve cihaz otomasyonu özelliklerini tek bir yardımcı deneyiminde birleştiren Android asistanıdır.
+
+Geliştirici: **Muhammed**
+
+Resmî proje deposu: [github.com/ThT0AltayHR/cocoumy](https://github.com/ThT0AltayHR/cocoumy)
 
 ## Öne çıkan özellikler
 
@@ -64,3 +68,7 @@ API anahtarlarını GitHub’a, APK’ya veya kaynak dosyalarına sabitlemeyin. 
 ## Lisans ve kaynaklar
 
 Bu proje, Android port kaynaklarını ve gerekli yardımcı dosyaları içerir. Dağıtım veya ticari kullanım öncesinde kullanılan özgün kaynakların lisanslarını ve üçüncü taraf bildirimlerini inceleyin. Ayrıntılar için `ATTRIBUTION_AND_LICENSES.md` dosyasına bakın.
+
+## TECHGPTX iletişim kanalları
+
+Uygulama içindeki YouTube, Instagram ve Telegram düğmeleri TECHGPTX topluluk bağlantılarına yönlendirir. Marka ve geliştirici kredisi: **TECHGPTX — Muhammed**.
