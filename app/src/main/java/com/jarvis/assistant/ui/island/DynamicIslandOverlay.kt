@@ -190,7 +190,7 @@ class DynamicIslandOverlay(private val context: Context) {
 
         val presentation = presentationFor(state, isSessionOn, isStandby, userText, assistantText)
         val details = Triple("●", presentation.title, presentation.message)
-        mood.setImageResource(com.jarvis.assistant.R.drawable.ic_helloai_emote)
+        mood.setImageResource(emoteResource(state, isSessionOn))
         mood.contentDescription = "HelloAI ${presentation.emote.assetName} emote"
         mood.imageTintList = android.content.res.ColorStateList.valueOf(
             if (isSessionOn) Color.rgb(74, 230, 142) else Color.rgb(236, 80, 88)
@@ -206,6 +206,16 @@ class DynamicIslandOverlay(private val context: Context) {
         actionRow.visibility = if (expanded) View.VISIBLE else View.GONE
         expandButton.text = if (expanded) "⌃" else "⌄"
         try { windowManager.updateViewLayout(shell, params) } catch (_: Exception) {}
+    }
+
+    private fun emoteResource(state: ConversationState, isSessionOn: Boolean): Int {
+        if (!isSessionOn) return com.jarvis.assistant.R.drawable.ic_helloai_error
+        return when (state) {
+            ConversationState.LISTENING -> com.jarvis.assistant.R.drawable.ic_helloai_listening
+            ConversationState.THINKING -> com.jarvis.assistant.R.drawable.ic_helloai_thinking
+            ConversationState.SPEAKING -> com.jarvis.assistant.R.drawable.ic_helloai_finished
+            ConversationState.IDLE -> com.jarvis.assistant.R.drawable.ic_helloai_emote
+        }
     }
 
     private fun presentationFor(
