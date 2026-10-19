@@ -1,0 +1,105 @@
+name: Android build and release
+
+on:
+  push:
+    branches: [ "main", "master" ]
+    tags: [ "v*" ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      ANDROID_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+    steps:
+      - name: Kaynak kodu al
+        uses: actions/checkout@v4
+
+      - name: Java 17 kur
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Android SDK kur
+        uses: android-actions/setup-android@v3
+
+      - name: SDK platformlarını kur
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0" "platform-tools"
+
+      - name: Gradle önbelleği hazırla
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Gradle wrapper izinlerini düzelt
+        run: chmod +x ./gradlew
+
+      - name: Türkçe uyandırma modelini hazırla
+        run: |
+          bash tools/fetch_turkish_wake_model.sh
+          test -s app/src/main/assets/model-tr/am/final.mdl
+          # Turkish wake support replaces the inherited English model in CI to keep APK size down.
+          rm -rf app/src/main/assets/model-en-us
+
+      - name: Hata ayıklama APK'sı derle
+        run: ./gradlew --no-daemon :app:assembleDebug
+
+      - name: APK hata ayıklama çıktısını yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: coucou-ai-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Release imzalama anahtarını hazırla
+        if: ${{ env.ANDROID_KEYSTORE_B64 != '' }}
+        id: signing
+        shell: bash
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          test -n "$KEYSTORE_PASSWORD" || (echo 'ANDROID_KEYSTORE_PASSWORD secret eksik.' && exit 1)
+          test -n "$KEY_ALIAS" || (echo 'ANDROID_KEY_ALIAS secret eksik.' && exit 1)
+          test -n "$KEY_PASSWORD" || (echo 'ANDROID_KEY_PASSWORD secret eksik.' && exit 1)
+          echo "$KEYSTORE_BASE64" | base64 --decode > "$GITHUB_WORKSPACE/coucou-release.jks"
+          chmod 600 "$GITHUB_WORKSPACE/coucou-release.jks"
+          FINGERPRINT="$(keytool -list -v -keystore "$GITHUB_WORKSPACE/coucou-release.jks" -storepass "$KEYSTORE_PASSWORD" -alias "$KEY_ALIAS" | awk '/SHA256:/ {gsub(":", "", $2); print toupper($2); exit}')"
+          test "${#FINGERPRINT}" -eq 64 || (echo 'Sertifika SHA-256 parmak izi okunamadı.' && exit 1)
+          echo "cert_sha256=$FINGERPRINT" >> "$GITHUB_OUTPUT"
+
+      - name: Release APK'sını imzalı olarak derle
+        if: ${{ env.ANDROID_KEYSTORE_B64 != '' }}
+        env:
+          JARVIS_RELEASE_STORE_FILE: ${{ github.workspace }}/coucou-release.jks
+          JARVIS_RELEASE_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          JARVIS_RELEASE_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          JARVIS_RELEASE_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          JARVIS_RELEASE_CERT_SHA256: ${{ steps.signing.outputs.cert_sha256 }}
+          JARVIS_DEVELOPER_NAME: ${{ secrets.APP_DEVELOPER_NAME }}
+          JARVIS_COPYRIGHT_OWNER: ${{ secrets.APP_COPYRIGHT_OWNER }}
+        run: ./gradlew --no-daemon :app:assembleRelease
+
+      - name: İmzalı Release APK'sını yükle
+        if: ${{ env.ANDROID_KEYSTORE_B64 != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: coucou-ai-release-apk
+          path: app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Etiketli sürümü GitHub Release olarak yayımla
+        if: ${{ startsWith(github.ref, 'refs/tags/v') && env.ANDROID_KEYSTORE_B64 != '' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          files: app/build/outputs/apk/release/*.apk
+          generate_release_notes: true
