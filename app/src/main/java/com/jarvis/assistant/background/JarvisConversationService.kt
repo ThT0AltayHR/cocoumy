@@ -3028,7 +3028,7 @@ class JarvisConversationService : Service() {
             val grammar = if (VoskModelManager.isTurkishWakeModelActive) {
                 "[\"merhaba\", \"hey merhaba\", \"[unk]\"]"
             } else {
-                "[\"jarvis\", \"hey jarvis\", \"hi jarvis\", \"hello jarvis\", \"ok jarvis\", \"okay jarvis\", \"wake up jarvis\", \"sun jarvis\", \"suno jarvis\", \"jarvis jarvis\", \"[unk]\"]"
+                "[\"jarvis\", \"hey jarvis\", \"hi jarvis\", \"hello jarvis\", \"ok jarvis\", \"okay jarvis\", \"wake up jarvis\", \"jarvis jarvis\", \"[unk]\"]"
             }
             val rec = Recognizer(model, 16000.0f, grammar)
             rec.setWords(true)

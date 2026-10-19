@@ -192,7 +192,7 @@ class SettingsFragment : Fragment() {
 
         // Social Media Community Buttons
         binding.btnSocialTelegram.setOnClickListener {
-            openUrl("https://t.me/+sYana61LvHdmZmE1")
+            openUrl("https://t.me/AltayHR")
         }
 
         binding.btnSocialInstagram.setOnClickListener {
@@ -204,7 +204,7 @@ class SettingsFragment : Fragment() {
         }
 
         binding.tvFooterCredit.setOnClickListener {
-            openUrl("https://t.me/+sYana61LvHdmZmE1")
+            openUrl("https://t.me/AltayHR")
         }
     }
 

@@ -44,7 +44,7 @@ class DynamicIslandOverlay(private val context: Context) {
         clipToPadding = false
         clipChildren = false
         isClickable = true
-        contentDescription = "Coucou AI canlı asistan alanı"
+        contentDescription = "HelloAI canlı asistan alanı"
     }
 
     private val headerRow = LinearLayout(context).apply {
@@ -52,7 +52,7 @@ class DynamicIslandOverlay(private val context: Context) {
         gravity = Gravity.CENTER_VERTICAL
     }
     private val mood = TextView(context).apply {
-        text = "✨"
+        text = "●"
         textSize = 20f
         gravity = Gravity.CENTER
         setTextColor(Color.WHITE)
@@ -62,7 +62,7 @@ class DynamicIslandOverlay(private val context: Context) {
         setPadding(dp(9), 0, dp(4), 0)
     }
     private val title = TextView(context).apply {
-        text = "COUCOU AI"
+        text = "HELLOAI"
         textSize = 11f
         setTextColor(Color.rgb(245, 247, 252))
         typeface = Typeface.create("sans-serif-medium", Typeface.BOLD)
@@ -179,15 +179,16 @@ class DynamicIslandOverlay(private val context: Context) {
         }
 
         val details = when {
-            isStandby && !isSessionOn -> Triple("👂", "UYANMA SÖZCÜĞÜ BEKLENİYOR", "‘Hey Merhaba’ dediğinde seni duymaya çalışacağım.")
-            !isSessionOn -> Triple("🌙", "DURAKLATILDI", "Canlı asistan kapalı.")
-            state == ConversationState.LISTENING -> Triple("👂", "SENİ DİNLİYORUM", "Söyle, buradayım.")
-            state == ConversationState.THINKING -> Triple("🧠", "DÜŞÜNÜYOR", "İsteğini değerlendiriyorum…")
-            state == ConversationState.SPEAKING -> Triple("💬", "YANITLIYOR", "Yanıt hazırlanıyor…")
-            !isSessionOn && !isStandby -> Triple("🌙", "HAZIR BEKLİYOR", "Canlı sohbeti uygulamadan başlatabilirsin.")
-            else -> Triple("✨", "GEMINI LIVE", "Canlı bağlantı hazır.")
+            isStandby && !isSessionOn -> Triple("●", "HEY JARVIS BEKLENİYOR", "Ekran kapalıyken de dinleme için izinleri açık tut.")
+            !isSessionOn -> Triple("●", "ÇEVRİMDIŞI", "Canlı asistan kapalı.")
+            state == ConversationState.LISTENING -> Triple("●", "CANLI SOHBET", "Seni dinliyorum.")
+            state == ConversationState.THINKING -> Triple("●", "DÜŞÜNÜYOR", "İsteğini değerlendiriyorum…")
+            state == ConversationState.SPEAKING -> Triple("●", "YANITLIYOR", "Yanıt hazırlanıyor…")
+            !isSessionOn && !isStandby -> Triple("●", "HAZIR BEKLİYOR", "Canlı sohbeti başlatabilirsin.")
+            else -> Triple("●", "CANLI SOHBET", "Bağlantı hazır.")
         }
         mood.text = details.first
+        mood.setTextColor(if (isSessionOn) Color.rgb(74, 230, 142) else Color.rgb(236, 80, 88))
         stateLabel.text = details.second
         updatePulse(state == ConversationState.THINKING || state == ConversationState.LISTENING)
         val latest = assistantText.trim().ifBlank { details.third }
