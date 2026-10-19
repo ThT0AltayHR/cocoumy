@@ -9,11 +9,22 @@ import android.content.Intent
 import android.widget.RemoteViews
 import com.jarvis.assistant.R
 import com.jarvis.assistant.ui.home.MainActivity
+import com.jarvis.assistant.util.LocationWeatherHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /** Minimal home-screen widget. It never stores credentials or starts microphone capture by itself. */
 class CoucouWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) {
-        ids.forEach { updateOne(context, manager, it, lastStatus.ifBlank { "Hazır · Sohbeti aç" }) }
+        ids.forEach { updateOne(context, manager, it, lastStatus.ifBlank { "Hazır · Sohbeti aç" }, "Hava durumu yükleniyor…") }
+        val result = goAsync()
+        CoroutineScope(Dispatchers.IO).launch {
+            val weather = LocationWeatherHelper.fetchWeather(context)
+            val text = weather?.let { "${it.temperature} · ${it.condition}" } ?: "Hava durumu için konum izni ver"
+            ids.forEach { updateOne(context, manager, it, lastStatus, text) }
+            result.finish()
+        }
     }
 
     companion object {
@@ -23,10 +34,10 @@ class CoucouWidgetProvider : AppWidgetProvider() {
             lastStatus = status
             val manager = AppWidgetManager.getInstance(context)
             val component = ComponentName(context, CoucouWidgetProvider::class.java)
-            manager.getAppWidgetIds(component).forEach { updateOne(context, manager, it, status) }
+            manager.getAppWidgetIds(component).forEach { updateOne(context, manager, it, status, "Hava durumu yenileniyor…") }
         }
 
-        private fun updateOne(context: Context, manager: AppWidgetManager, id: Int, status: String) {
+        private fun updateOne(context: Context, manager: AppWidgetManager, id: Int, status: String, weather: String) {
             val openIntent = Intent(context, MainActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 putExtra(MainActivity.EXTRA_OPEN_CHAT, true)
@@ -36,6 +47,7 @@ class CoucouWidgetProvider : AppWidgetProvider() {
             val pending = PendingIntent.getActivity(context, id, openIntent, flags)
             val views = RemoteViews(context.packageName, R.layout.widget_coucou_status).apply {
                 setTextViewText(R.id.widgetStatus, status)
+                setTextViewText(R.id.widgetWeather, weather)
                 setOnClickPendingIntent(R.id.widgetRoot, pending)
                 setOnClickPendingIntent(R.id.widgetOpenChat, pending)
             }

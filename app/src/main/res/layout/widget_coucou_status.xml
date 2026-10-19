@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="✦ COUCOU AI"
+        android:text="HELLOAI"
         android:textColor="#F4F6FF"
         android:textStyle="bold"
         android:textSize="14sp" />
@@ -24,6 +24,16 @@
         android:text="Hazır · Sohbeti aç"
         android:textColor="#C6D0E5"
         android:textSize="12sp"
+        android:maxLines="2" />
+
+    <TextView
+        android:id="@+id/widgetWeather"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Hava durumu için konum izni ver"
+        android:textColor="#9FE7B8"
+        android:textSize="11sp"
         android:maxLines="2" />
 
     <TextView
