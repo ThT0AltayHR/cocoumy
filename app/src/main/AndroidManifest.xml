@@ -132,6 +132,18 @@
             </intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/helloai_weather_widget_info" />
         </receiver>
+        <receiver
+            android:name=".widget.HelloAiControlWidgetProvider"
+            android:exported="true"
+            android:label="HelloAI Kontrol">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.myappai.app.widget.TALK" />
+                <action android:name="com.myappai.app.widget.CHAT" />
+                <action android:name="com.myappai.app.widget.STANDBY" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/helloai_control_widget_info" />
+        </receiver>
 
         <service
             android:name=".automation.accessibility.JarvisAccessibilityService"
